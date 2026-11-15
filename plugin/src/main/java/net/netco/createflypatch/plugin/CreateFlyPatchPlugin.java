@@ -85,6 +85,14 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetInjectionPoint("TAIL", null)
                 .disable()
                 .build(),
+            // HudMixin#renderMainHud: Adapter moves it into NeoForge's no-arg updateContextualBarRenderer(), where its
+            // @Local graphics/deltaTracker args don't exist (fails at runtime) -> HudTrainOverlayMixin
+            MethodPatch.builder()
+                .targetClass("net/minecraft/client/gui/Hud")
+                .targetMethod("extractHotbarAndDecorations")
+                .targetInjectionPoint("INVOKE", "Lnet/minecraft/client/gui/Hud;nextContextualInfoState()Lnet/minecraft/client/gui/Hud$ContextualInfo;")
+                .disable()
+                .build(),
             // GuiRendererMixin#addRenderer -> RegisterPictureInPictureRenderersEvent in CreateFlyPatchClient
             MethodPatch.builder()
                 .targetClass("net/minecraft/client/gui/render/GuiRenderer")

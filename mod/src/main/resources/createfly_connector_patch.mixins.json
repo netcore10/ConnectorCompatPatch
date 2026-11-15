@@ -11,5 +11,7 @@
     "CreateRegistriesMixin",
     "ServerPlayerGameModeBreakControlMixin"
   ],
-  "client": []
+  "client": [
+    "client.HudTrainOverlayMixin"
+  ]
 }

@@ -26,3 +26,6 @@ type="required"
 versionRange="*"
 ordering="AFTER"
 side="BOTH"
+
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
