@@ -3,9 +3,12 @@ package net.netco.createflypatch.plugin;
 import org.sinytra.adapter.api.MethodPatch;
 import org.sinytra.connector.transformer.api.PatchRegistrar;
 import org.sinytra.connector.transformer.api.TransformerContext;
+import org.sinytra.connector.transformer.api.TransformerIds;
 import org.sinytra.connector.transformer.api.TransformerPlugin;
+import org.sinytra.connector.transformer.api.TransformerRegistrar;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Fixes the Create Fly (Fabric) mixins that NeoForge's patches break and Connector's Adapter can't remap.
@@ -16,7 +19,7 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
     private static final String CREATE_FLY_ID = "create";
 
     private static final String GET_SOUND_TYPE = "Lnet/minecraft/world/level/block/state/BlockState;getSoundType()Lnet/minecraft/world/level/block/SoundType;";
-    private static final String BLOCK_GET_FRICTION = "Lnet/minecraft/world/level/block/Block;getFriction()F";
+    private static final String BLOCK_GET_FRICTION ="Lnet/minecraft/world/level/block/Block;getFriction()F";
     private static final String DESTROY_BLOCK ="Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z";
 
     // NeoForge's lambda also captures its LeftClickBlock event
@@ -145,14 +148,19 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetMethod("useOn")
                 .targetInjectionPoint("INVOKE", "Lnet/minecraft/world/InteractionResult$Success;wasItemInteraction()Z")
                 .disable()
-                .build(),
-            // GuiRendererMixin#addRenderer -> RegisterPictureInPictureRenderersEvent in CreateFlyPatchClient
-            MethodPatch.builder()
-                .targetClass("net/minecraft/client/gui/render/GuiRenderer")
-                .targetMethod("<init>")
-                .targetInjectionPoint("INVOKE", "Lcom/google/common/collect/ImmutableMap;builder()Lcom/google/common/collect/ImmutableMap$Builder;")
-                .disable()
                 .build()
+            // GuiRendererMixin#addRenderer: works as written via GuiRendererHookRestorer (all Fabric mods)
         ));
+    }
+
+    /**
+     * Mixins written against hook points this patch restores (see GuiRendererHookRestorer) stay exactly as the mod wrote them,
+     * for every Fabric mod. Adapter can't see the restored calls, rejects them, and leaves them unchanged; this marks those
+     * rejections as expected so Connector's safeguard doesn't stop the game.
+     */
+    @Override
+    public void registerJarTransformers(TransformerRegistrar registrar, TransformerContext context) {
+        registrar.registerAfter("createfly_connector_patch:restored_hook_audit", Set.of(TransformerIds.METHOD_PATCHES),
+            new RestoredHookAuditFilter(context.patchEnvironment().auditTrail()));
     }
 }

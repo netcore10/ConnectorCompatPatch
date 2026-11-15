@@ -17,11 +17,9 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 import java.util.List;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 @Mod(CreateFlyPatchMod.MOD_ID)
@@ -38,9 +36,6 @@ public class CreateFlyPatchMod {
         if (Boolean.getBoolean("createflypatch.mixinAudit")) {
             modBus.addListener((net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent e) ->
                 org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit());
-        }
-        if (FMLEnvironment.getDist() == Dist.CLIENT) {
-            CreateFlyPatchClient.init(modBus);
         }
     }
 
