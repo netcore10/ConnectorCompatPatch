@@ -97,14 +97,7 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetInjectionPoint("INVOKE", "Lnet/minecraft/client/gui/Hud;nextContextualInfoState()Lnet/minecraft/client/gui/Hud$ContextualInfo;")
                 .disable()
                 .build(),
-            // ReloadableServerResourcesMixin#add: appends Create's server reload listeners to vanilla's list, which NeoForge
-            // rejects ("must go through the event"), hanging world creation -> AddServerReloadListenersEvent in CreateFlyPatchMod
-            MethodPatch.builder()
-                .targetClass("net/minecraft/server/ReloadableServerResources")
-                .targetMethod("listeners")
-                .targetInjectionPoint("RETURN", null)
-                .disable()
-                .build(),
+            // ReloadableServerResourcesMixin#add: works as written via AddServerReloadListenersEventMixin (all Fabric mods)
             // PersistentEntitySectionManagerCallbackMixin#onEnteringSection: implicit @Local long finds 2 candidates on NeoForge
             // (NeoForge adds oldSectionKey) -> EntityEvent.EnteringSection in CreateFlyPatchMod
             MethodPatch.builder()
