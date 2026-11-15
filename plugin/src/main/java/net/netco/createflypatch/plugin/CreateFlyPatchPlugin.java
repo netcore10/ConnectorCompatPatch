@@ -93,6 +93,14 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetInjectionPoint("INVOKE", "Lnet/minecraft/client/gui/Hud;nextContextualInfoState()Lnet/minecraft/client/gui/Hud$ContextualInfo;")
                 .disable()
                 .build(),
+            // ReloadableServerResourcesMixin#add: appends Create's server reload listeners to vanilla's list, which NeoForge
+            // rejects ("must go through the event"), hanging world creation -> AddServerReloadListenersEvent in CreateFlyPatchMod
+            MethodPatch.builder()
+                .targetClass("net/minecraft/server/ReloadableServerResources")
+                .targetMethod("listeners")
+                .targetInjectionPoint("RETURN", null)
+                .disable()
+                .build(),
             // GuiRendererMixin#addRenderer -> RegisterPictureInPictureRenderersEvent in CreateFlyPatchClient
             MethodPatch.builder()
                 .targetClass("net/minecraft/client/gui/render/GuiRenderer")
