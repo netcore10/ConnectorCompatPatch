@@ -9,6 +9,11 @@ neoForge {
     version = neo_version
     runs {
         client { client() }
+        // Force-applies all mixins at load-complete and logs every failure (see CreateFlyPatchMod)
+        auditClient {
+            client()
+            systemProperty 'createflypatch.mixinAudit', 'true'
+        }
         gameTestServer { type = 'gameTestServer' }
         configureEach {
             gameDirectory = file('run')
@@ -32,6 +37,6 @@ def clearConnectorCache = tasks.register('clearConnectorCache', Delete) {
     delete 'run/.cache/connector'
 }
 
-tasks.matching { it.name in ['prepareClientRun', 'prepareGameTestServerRun'] }.configureEach {
+tasks.matching { it.name in ['prepareClientRun', 'prepareAuditClientRun', 'prepareGameTestServerRun'] }.configureEach {
     dependsOn installMods, clearConnectorCache
 }

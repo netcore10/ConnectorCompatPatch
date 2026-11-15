@@ -101,6 +101,14 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetInjectionPoint("RETURN", null)
                 .disable()
                 .build(),
+            // PersistentEntitySectionManagerCallbackMixin#onEnteringSection: implicit @Local long finds 2 candidates on NeoForge
+            // (NeoForge adds oldSectionKey) -> EntityEvent.EnteringSection in CreateFlyPatchMod
+            MethodPatch.builder()
+                .targetClass("net/minecraft/world/level/entity/PersistentEntitySectionManager$Callback")
+                .targetMethod("onMove")
+                .targetInjectionPoint("INVOKE", "Lnet/minecraft/world/level/entity/PersistentEntitySectionManager$Callback;updateStatus(Lnet/minecraft/world/level/entity/Visibility;Lnet/minecraft/world/level/entity/Visibility;)V")
+                .disable()
+                .build(),
             // GuiRendererMixin#addRenderer -> RegisterPictureInPictureRenderersEvent in CreateFlyPatchClient
             MethodPatch.builder()
                 .targetClass("net/minecraft/client/gui/render/GuiRenderer")
