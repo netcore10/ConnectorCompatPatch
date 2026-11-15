@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+}
+
+version = mod_version
+base.archivesName = 'createfly-connector-patch'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+repositories {
+    maven { url = 'https://maven.neoforged.net/releases' }
+    mavenCentral()
+}
+
+configurations {
+    nestedMod { canBeResolved = true; canBeConsumed = false }
+}
+
+dependencies {
+    // Connector plugin API + Sinytra Adapter (both inside the full jar)
+    compileOnly files("${rootDir}/libs/${connector_jar}")
+    // Fabric Loader's ModMetadata (CandidateJarMetadata#modMetadata) is provided by Sinytra Launchpad
+    compileOnly files("${rootDir}/libs/${launchpad_jar}")
+    // FML SPI: a no-op IDependencyLocator makes FML load this jar as an early service, next to Connector
+    compileOnly('net.neoforged.fancymodloader:loader:11.0.16') { transitive = false }
+    nestedMod project(path: ':mod', configuration: 'runtimeElements')
+}
+
+def nestedPath = 'META-INF/jarjar/createfly-connector-patch-mod.jar'
+
+def writeJarJarMetadata = tasks.register('writeJarJarMetadata') {
+    def out = layout.buildDirectory.file('jarjar/metadata.json')
+    inputs.property('version', mod_version)
+    outputs.file(out)
+    doLast {
+        out.get().asFile.parentFile.mkdirs()
+        out.get().asFile.text = """{
+  "jars": [
+    {
+      "identifier": { "group": "net.netco", "artifact": "createfly-connector-patch-mod" },
+      "version": { "range": "[${mod_version},)", "artifactVersion": "${mod_version}" },
+      "path": "${nestedPath}",
+      "isObfuscated": false
+    }
+  ]
+}
+"""
+    }
+}
+
+processResources {
+    def props = [mod_version: mod_version]
+    inputs.properties props
+    filesMatching('META-INF/neoforge.mods.toml') { expand props }
+}
+
+jar {
+    dependsOn ':mod:jar', writeJarJarMetadata
+    from(configurations.nestedMod.filter { it.name.startsWith('createfly-connector-patch-mod') }) {
+        into 'META-INF/jarjar'
+        rename { 'createfly-connector-patch-mod.jar' }
+    }
+    from(writeJarJarMetadata) { into 'META-INF/jarjar' }
+    manifest {
+        attributes('Implementation-Version': mod_version, 'Automatic-Module-Name': 'net.netco.createflypatch.plugin')
+    }
+}

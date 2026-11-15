@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+base.archivesName = 'createfly-connector-patch-mod'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+neoForge {
+    version = neo_version
+}
+
+dependencies {
+    // Create Fly's classes are referenced directly (SoundControlBlock, renderers, ...).
+    // At runtime they are Connector's transformed copy of the same jar.
+    compileOnly files("${rootDir}/libs/${create_fly_jar}")
+    compileOnly files("${rootDir}/libs/${fabric_api_jar}")
+}
+
+processResources {
+    def props = [mod_version: mod_version]
+    inputs.properties props
+    filesMatching('META-INF/neoforge.mods.toml') { expand props }
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "net.netco.createflypatch.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "BlockSoundControlMixin",
+    "CreateRegistriesMixin",
+    "ServerPlayerGameModeBreakControlMixin"
+  ],
+  "client": []
+}

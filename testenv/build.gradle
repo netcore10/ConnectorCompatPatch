@@ -1,0 +1,37 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+// No sources: this project only runs NeoForge with jars in run/mods, the same way a Modrinth profile loads them
+neoForge {
+    version = neo_version
+    runs {
+        client { client() }
+        gameTestServer { type = 'gameTestServer' }
+        configureEach {
+            gameDirectory = file('run')
+            systemProperty 'neoforge.warnings.logofile.hide', 'true'
+        }
+    }
+}
+
+def installMods = tasks.register('installMods', Sync) {
+    dependsOn ':plugin:jar'
+    from(project(':plugin').tasks.named('jar'))
+    from("${rootDir}/libs") {
+        include connector_jar, launchpad_jar, create_fly_jar, fabric_api_jar
+    }
+    into 'run/mods'
+}
+
+// Connector caches transformed jars by Connector version + input bytes only, not by plugins,
+// so wipe its cache whenever the patch changes
+def clearConnectorCache = tasks.register('clearConnectorCache', Delete) {
+    delete 'run/.cache/connector'
+}
+
+tasks.matching { it.name in ['prepareClientRun', 'prepareGameTestServerRun'] }.configureEach {
+    dependsOn installMods, clearConnectorCache
+}
