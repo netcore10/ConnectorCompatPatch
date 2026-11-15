@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin.client;
+package net.netco.connectorcompat.mixin.create.client;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(GlBufferType.class)
 public abstract class FlywheelGlBufferTypeMixin {
     @WrapMethod(method = "fromTarget")
-    private static GlBufferType createFlyPatch$unknownTargetIsUntracked(int target, Operation<GlBufferType> original) {
+    private static GlBufferType connectorCompat$unknownTargetIsUntracked(int target, Operation<GlBufferType> original) {
         try {
             return original.call(target);
         } catch (IllegalArgumentException e) {

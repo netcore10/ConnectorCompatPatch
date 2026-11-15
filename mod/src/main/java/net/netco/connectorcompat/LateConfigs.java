@@ -1,4 +1,4 @@
-package net.netco.createflypatch;
+package net.netco.connectorcompat;
 
 import net.neoforged.fml.config.ConfigTracker;
 import net.neoforged.fml.config.ModConfig;
@@ -21,7 +21,7 @@ import java.util.Set;
  * the same way NeoForge loads them. SERVER configs are loaded per world by NeoForge and need nothing.
  */
 public final class LateConfigs {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreateFlyPatchMod.MOD_ID);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorCompatMod.MOD_ID);
 
     @SuppressWarnings("unchecked")
     public static void load() {

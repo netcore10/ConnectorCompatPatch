@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -20,7 +20,7 @@ import java.util.Locale;
 @Mixin(AddServerReloadListenersEvent.class)
 public abstract class AddServerReloadListenersEventMixin {
     @Inject(method = "lookupName", at = @At("HEAD"), cancellable = true)
-    private static void createFlyPatch$nameMixinAddedListener(PreparableReloadListener listener, CallbackInfoReturnable<Identifier> cir) {
+    private static void connectorCompat$nameMixinAddedListener(PreparableReloadListener listener, CallbackInfoReturnable<Identifier> cir) {
         Class<? extends PreparableReloadListener> type = listener.getClass();
         if (VanillaServerListeners.getNameForClass(type) == null && !type.getPackageName().startsWith("net.minecraft")) {
             String path = type.getName().toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9/._-]", "_");

@@ -3,26 +3,29 @@ loaderVersion="*"
 license="MIT"
 
 [[mods]]
-modId="createfly_connector_patch"
+modId="connector_compat_patch"
 version="${mod_version}"
-displayName="Create Fly Connector Patch"
+displayName="Connector Compat Patch"
 description='''
-Fixes Create Fly (Fabric) mixins that fail on NeoForge 26.2 under Sinytra Connector.
+Fixes Fabric mods that break on NeoForge 26.2 under Sinytra Connector, alongside the mods themselves (Create Fly and its addons included).
 '''
 
 [[mixins]]
-config="createfly_connector_patch.mixins.json"
+config="connector_compat_patch.mixins.json"
 
-[[dependencies.createfly_connector_patch]]
+[[mixins]]
+config="connector_compat_patch.create.mixins.json"
+
+[[dependencies.connector_compat_patch]]
 modId="connector"
 type="required"
 versionRange="*"
 ordering="AFTER"
 side="BOTH"
 
-[[dependencies.createfly_connector_patch]]
+[[dependencies.connector_compat_patch]]
 modId="create"
-type="required"
+type="optional"
 versionRange="*"
 ordering="AFTER"
 side="BOTH"

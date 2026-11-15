@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin.create;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -29,7 +29,7 @@ public abstract class CommonHooksPlacementMixin {
         method = "onPlaceItemIntoWorld(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;")
     )
-    private static void createFlyPatch$cachePlacement(
+    private static void connectorCompat$cachePlacement(
         UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, @Share("place") LocalRef<BlockPlaceContext> place
     ) {
         if (context.getItemInHand().getItem() instanceof BlockItem && !context.getLevel().isClientSide()) {
@@ -41,7 +41,7 @@ public abstract class CommonHooksPlacementMixin {
         method = "onPlaceItemIntoWorld(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;",
         at = @At("RETURN")
     )
-    private static void createFlyPatch$afterPlacement(
+    private static void connectorCompat$afterPlacement(
         UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, @Share("place") LocalRef<BlockPlaceContext> place
     ) {
         BlockPlaceContext placementContext = place.get();

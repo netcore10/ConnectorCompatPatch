@@ -1,4 +1,4 @@
-package net.netco.createflypatch.plugin;
+package net.netco.connectorcompat.plugin;
 
 import net.neoforged.neoforgespi.transformation.ClassProcessor;
 import net.neoforged.neoforgespi.transformation.ClassProcessorIds;
@@ -23,7 +23,7 @@ import java.util.Set;
  * Connector's own GuiRenderer compat then runs them as single persistent instances, like vanilla, instead of NeoForge pools.
  */
 public class GuiRendererHookRestorer implements ClassProcessor {
-    private static final ProcessorName ID = new ProcessorName("createfly_connector_patch", "gui_renderer_hook");
+    private static final ProcessorName ID = new ProcessorName("connector_compat_patch", "gui_renderer_hook");
     private static final String GUI_RENDERER = "net.minecraft.client.gui.render.GuiRenderer";
     private static final String CTOR_DESC = "(Lnet/minecraft/client/renderer/state/gui/GuiRenderState;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;Ljava/util/List;)V";
 
@@ -54,7 +54,7 @@ public class GuiRendererHookRestorer implements ClassProcessor {
                     InsnList inject = new InsnList();
                     inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/google/common/collect/ImmutableMap", "builder",
                         "()Lcom/google/common/collect/ImmutableMap$Builder;", false));
-                    inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/netco/createflypatch/FabricPipRenderers", "merge",
+                    inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/netco/connectorcompat/FabricPipRenderers", "merge",
                         "(Ljava/util/List;Lcom/google/common/collect/ImmutableMap$Builder;)Ljava/util/List;", false));
                     method.instructions.insertBefore(call, inject);
                     context.audit("restored", "ImmutableMap.builder() hook before createPools");

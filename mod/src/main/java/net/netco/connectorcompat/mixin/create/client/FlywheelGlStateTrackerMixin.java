@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin.client;
+package net.netco.connectorcompat.mixin.create.client;
 
 import com.zurrtum.create.client.flywheel.backend.gl.GlStateTracker;
 import com.zurrtum.create.client.flywheel.backend.gl.buffer.GlBufferType;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GlStateTracker.class)
 public abstract class FlywheelGlStateTrackerMixin {
     @Inject(method = "_setBuffer", at = @At("HEAD"), cancellable = true)
-    private static void createFlyPatch$skipUntrackedTarget(GlBufferType type, int buffer, CallbackInfo ci) {
+    private static void connectorCompat$skipUntrackedTarget(GlBufferType type, int buffer, CallbackInfo ci) {
         if (type == null) {
             ci.cancel();
         }

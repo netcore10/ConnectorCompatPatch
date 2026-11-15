@@ -1,23 +1,19 @@
 {
   "required": true,
-  "package": "net.netco.createflypatch.mixin",
+  "package": "net.netco.connectorcompat.mixin.create",
+  "plugin": "net.netco.connectorcompat.mixin.create.CreateMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "AddServerReloadListenersEventMixin",
     "BlockSoundControlMixin",
-    "CommonModLoaderMixin",
-    "CreativeModeTabsValidateMixin",
-    "FabricEntrypointsLateConfigMixin",
     "CommonHooksPlacementMixin",
     "CreateRegistriesMixin",
     "ServerPlayerGameModeBreakControlMixin"
   ],
   "client": [
-    "client.FabricEntrypointsLateConfigClientMixin",
     "client.FlywheelGlBufferTypeMixin",
     "client.FlywheelGlStateTrackerMixin",
     "client.HudTrainOverlayMixin"

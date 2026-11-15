@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin.create;
 
 import com.zurrtum.create.foundation.block.SlipperinessControlBlock;
 import com.zurrtum.create.foundation.block.SoundControlBlock;

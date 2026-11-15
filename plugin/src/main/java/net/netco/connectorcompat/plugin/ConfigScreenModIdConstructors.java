@@ -1,4 +1,4 @@
-package net.netco.createflypatch.plugin;
+package net.netco.connectorcompat.plugin;
 
 import net.neoforged.neoforgespi.transformation.ClassProcessor;
 import net.neoforged.neoforgespi.transformation.ProcessorName;
@@ -24,7 +24,7 @@ import java.util.Set;
  * that looks the mod up and delegates: {@code this(ModList.get().getModContainerById(modId).orElseThrow(), ...)}.
  */
 public class ConfigScreenModIdConstructors implements ClassProcessor {
-    private static final ProcessorName ID = new ProcessorName("createfly_connector_patch", "config_screen_mod_id");
+    private static final ProcessorName ID = new ProcessorName("connector_compat_patch", "config_screen_mod_id");
     private static final String OWNER = "net/neoforged/neoforge/client/gui/ConfigurationScreen";
     private static final String MOD_CONTAINER = "Lnet/neoforged/fml/ModContainer;";
 

@@ -1,4 +1,4 @@
-package net.netco.createflypatch;
+package net.netco.connectorcompat;
 
 import com.google.common.collect.ImmutableMap;
 

@@ -1,4 +1,4 @@
-package net.netco.createflypatch.plugin;
+package net.netco.connectorcompat.plugin;
 
 import net.neoforged.art.api.Transformer;
 import org.objectweb.asm.Type;

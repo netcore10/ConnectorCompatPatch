@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin.create;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -33,7 +33,7 @@ public abstract class ServerPlayerGameModeBreakControlMixin {
         method = "removeBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;ZLnet/minecraft/world/item/ItemStack;)Z",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onDestroyedByPlayer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;ZLnet/minecraft/world/level/material/FluidState;)Z")
     )
-    private boolean createFlyPatch$breakControl(
+    private boolean connectorCompat$breakControl(
         BlockState state, Level level, BlockPos pos, Player destroyer, ItemStack tool, boolean willHarvest, FluidState fluid,
         Operation<Boolean> original
     ) {

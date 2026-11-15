@@ -1,7 +1,7 @@
-package net.netco.createflypatch.mixin.client;
+package net.netco.connectorcompat.mixin.client;
 
 import net.minecraft.client.Minecraft;
-import net.netco.createflypatch.LateConfigs;
+import net.netco.connectorcompat.LateConfigs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class FabricEntrypointsLateConfigClientMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void createFlyPatch$loadLateConfigs(CallbackInfo ci) {
+    private void connectorCompat$loadLateConfigs(CallbackInfo ci) {
         LateConfigs.load();
     }
 }

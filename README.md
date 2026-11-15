@@ -1,8 +1,10 @@
-# Create Fly Connector Patch
+# Connector Compat Patch
 
-A companion mod that lets [Create Fly](https://modrinth.com/mod/create-fly) (Fabric) and its Fabric addons run on **NeoForge 26.2** through [Sinytra Connector](https://github.com/Sinytra/Connector).
+A companion mod that fixes Fabric mods running on **NeoForge 26.2** through [Sinytra Connector](https://github.com/Sinytra/Connector), including [Create Fly](https://modrinth.com/mod/create-fly) and its Fabric addons.
 
-It does not replace Create Fly or any addon. It runs alongside them and fixes the places where Fabric code breaks on NeoForge.
+It does not replace any mod. It runs alongside them and fixes the places where Fabric code breaks on NeoForge. The Create fixes only switch on when Create Fly is installed.
+
+*Formerly "Create Fly Connector Patch".*
 
 > **Made with AI.** The code, commit messages and this README were written by Claude (Anthropic's AI model, used through Claude Code) under my direction. I tested it in game. It is not reviewed or endorsed by the Create, Create Fly or Sinytra teams. Use at your own risk, and don't report issues it causes to them.
 
@@ -11,11 +13,11 @@ It does not replace Create Fly or any addon. It runs alongside them and fixes th
 - NeoForge 26.2 (tested with 26.2.0.93)
 - Sinytra Connector 3.1.0-beta.4+26.2
 - Forgified Fabric API 0.161.0+26.2
-- Create Fly 26.2-6.0.9-2
+- Optional: Create Fly 26.2-6.0.9-2 (for the Create fixes)
 
 ## Install
 
-Put `createfly-connector-patch-1.0.0.jar` in your `mods` folder next to Connector and Create Fly. After updating the patch, delete `.cache/connector` in your instance folder so Connector re-transforms the mods.
+Put `connector-compat-patch-1.0.0.jar` in your `mods` folder next to Connector (remove the old `createfly-connector-patch` jar if you had it). After updating the patch, delete `.cache/connector` in your instance folder so Connector re-transforms the mods.
 
 ## What it fixes
 
@@ -27,7 +29,7 @@ For all Fabric mods loaded through Connector:
 - Adds Forge Config API Port's Fabric-side `ConfigurationScreen(String modId, Screen parent)` constructors to NeoForge's class, so Fabric mods' config screens don't crash at startup (e.g. Exposure).
 - Loads COMMON/CLIENT configs that Fabric mods register from their entrypoints, which run after NeoForge has already loaded configs (fixes "Cannot get config value before config is loaded" on world load, e.g. Exposure).
 
-For Create Fly:
+For Create Fly (only when it's installed):
 - Retargets or replaces its mixins that fail on NeoForge (block breaking, train HUD, entity section tracking, super glue and symmetry wand placement, sound/friction blocks, registry setup).
 - Its bundled Flywheel no longer crashes on GL buffer types it doesn't know (Crankshaft + Distant Horizons).
 
@@ -35,6 +37,7 @@ For Create Fly:
 
 - 26.2 only. There is no 26.3 build because Connector has no 26.3 release yet.
 - The Flywheel GL buffer fix passes the mixin audit but hasn't been confirmed in game yet.
+- Not yet tested in a pack without Create Fly.
 - Dedicated servers: Connector 3.1.0-beta.4 does not auto-patch Fabric mods on servers (an upstream bug), so server support is limited.
 
 ## Building
@@ -45,7 +48,7 @@ Place the jars listed in `gradle.properties` into `libs/` (not committed), then:
 ./gradlew :plugin:build
 ```
 
-The output is `plugin/build/libs/createfly-connector-patch-1.0.0.jar`. `./gradlew :testenv:runClient` starts a dev client with Connector, Create Fly and the patch (extra mods go in `testenv/extra-mods/`).
+The output is `plugin/build/libs/connector-compat-patch-1.0.0.jar`. `./gradlew :testenv:runClient` starts a dev client with Connector, Create Fly and the patch (extra mods go in `testenv/extra-mods/`).
 
 ## License
 

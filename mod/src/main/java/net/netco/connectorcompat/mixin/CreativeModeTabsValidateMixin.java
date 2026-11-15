@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,7 +20,7 @@ import java.util.Map;
 @Mixin(CreativeModeTabs.class)
 public abstract class CreativeModeTabsValidateMixin {
     @WrapOperation(method = "validate", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private static Object createFlyPatch$onlyCheckVanillaTabs(
+    private static Object connectorCompat$onlyCheckVanillaTabs(
         Map<Object, Object> positions, Object position, Object name, Operation<Object> original,
         @Local ResourceKey<CreativeModeTab> tabKey
     ) {

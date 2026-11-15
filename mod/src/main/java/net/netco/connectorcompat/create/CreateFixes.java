@@ -1,4 +1,4 @@
-package net.netco.createflypatch;
+package net.netco.connectorcompat.create;
 
 import com.zurrtum.create.api.registry.CreateRegistries;
 import com.zurrtum.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
@@ -6,28 +6,18 @@ import com.zurrtum.create.content.kinetics.mechanicalArm.ArmInteractionPointType
 import com.zurrtum.create.content.trains.entity.CarriageEntityHandler;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
-import net.neoforged.neoforge.event.entity.EntityEvent;
-import net.neoforged.neoforge.common.NeoForge;
-
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
-@Mod(CreateFlyPatchMod.MOD_ID)
-public class CreateFlyPatchMod {
-    public static final String MOD_ID = "createfly_connector_patch";
-
-    public CreateFlyPatchMod(IEventBus modBus) {
-        modBus.addListener(CreateFlyPatchMod::registerCreateRegistries);
-        modBus.addListener(CreateFlyPatchMod::buildSortedTypes);
-        NeoForge.EVENT_BUS.addListener(CreateFlyPatchMod::onEntityEnterSection);
-        // Diagnostic only (testenv auditClient run): apply every pending mixin now, logging each failure instead of
-        // crashing on the first one the moment its target class happens to load in game
-        if (Boolean.getBoolean("createflypatch.mixinAudit")) {
-            modBus.addListener((net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent e) ->
-                org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit());
-        }
+/** Create Fly fixes that run as NeoForge event listeners. Only registered when Create is installed. */
+public final class CreateFixes {
+    public static void register(IEventBus modBus) {
+        modBus.addListener(CreateFixes::registerCreateRegistries);
+        modBus.addListener(CreateFixes::buildSortedTypes);
+        NeoForge.EVENT_BUS.addListener(CreateFixes::onEntityEnterSection);
     }
 
     /** NeoForge's sanctioned point for new registries; replaces CreateRegistries' direct root-registry writes. */

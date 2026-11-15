@@ -1,4 +1,4 @@
-package net.netco.createflypatch;
+package net.netco.connectorcompat.create;
 
 import net.minecraft.core.Registry;
 

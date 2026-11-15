@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin;
 
 import net.neoforged.neoforge.internal.CommonModLoader;
 import net.neoforged.neoforge.registries.GameData;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CommonModLoader.class)
 public abstract class CommonModLoaderMixin {
     @Inject(method = "begin", at = @At("HEAD"))
-    private static void createFlyPatch$openRegistriesDuringConstruction(Runnable periodicTask, boolean datagen, CallbackInfo ci) {
+    private static void connectorCompat$openRegistriesDuringConstruction(Runnable periodicTask, boolean datagen, CallbackInfo ci) {
         GameData.unfreezeData();
     }
 }

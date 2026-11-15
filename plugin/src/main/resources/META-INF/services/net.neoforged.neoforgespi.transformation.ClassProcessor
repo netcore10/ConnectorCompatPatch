@@ -1,2 +1,2 @@
-net.netco.createflypatch.plugin.GuiRendererHookRestorer
-net.netco.createflypatch.plugin.ConfigScreenModIdConstructors
+net.netco.connectorcompat.plugin.GuiRendererHookRestorer
+net.netco.connectorcompat.plugin.ConfigScreenModIdConstructors

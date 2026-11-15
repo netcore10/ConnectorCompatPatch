@@ -9,7 +9,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
-rootProject.name = 'createfly-connector-patch'
+rootProject.name = 'connector-compat-patch'
 
 // mod: NeoForge-native replacements (nested jar-in-jar)
 // plugin: Connector TransformerPlugin; the outer jar that goes in mods/

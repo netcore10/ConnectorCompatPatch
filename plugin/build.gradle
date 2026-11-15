@@ -3,7 +3,7 @@ plugins {
 }
 
 version = mod_version
-base.archivesName = 'createfly-connector-patch'
+base.archivesName = 'connector-compat-patch'
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 repositories {
@@ -26,7 +26,7 @@ dependencies {
     nestedMod project(path: ':mod', configuration: 'runtimeElements')
 }
 
-def nestedPath = 'META-INF/jarjar/createfly-connector-patch-mod.jar'
+def nestedPath = 'META-INF/jarjar/connector-compat-patch-mod.jar'
 
 def writeJarJarMetadata = tasks.register('writeJarJarMetadata') {
     def out = layout.buildDirectory.file('jarjar/metadata.json')
@@ -37,7 +37,7 @@ def writeJarJarMetadata = tasks.register('writeJarJarMetadata') {
         out.get().asFile.text = """{
   "jars": [
     {
-      "identifier": { "group": "net.netco", "artifact": "createfly-connector-patch-mod" },
+      "identifier": { "group": "net.netco", "artifact": "connector-compat-patch-mod" },
       "version": { "range": "[${mod_version},)", "artifactVersion": "${mod_version}" },
       "path": "${nestedPath}",
       "isObfuscated": false
@@ -56,12 +56,12 @@ processResources {
 
 jar {
     dependsOn ':mod:jar', writeJarJarMetadata
-    from(configurations.nestedMod.filter { it.name.startsWith('createfly-connector-patch-mod') }) {
+    from(configurations.nestedMod.filter { it.name.startsWith('connector-compat-patch-mod') }) {
         into 'META-INF/jarjar'
-        rename { 'createfly-connector-patch-mod.jar' }
+        rename { 'connector-compat-patch-mod.jar' }
     }
     from(writeJarJarMetadata) { into 'META-INF/jarjar' }
     manifest {
-        attributes('Implementation-Version': mod_version, 'Automatic-Module-Name': 'net.netco.createflypatch.plugin')
+        attributes('Implementation-Version': mod_version, 'Automatic-Module-Name': 'net.netco.connectorcompat.plugin')
     }
 }

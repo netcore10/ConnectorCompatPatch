@@ -1,4 +1,4 @@
-package net.netco.createflypatch.plugin;
+package net.netco.connectorcompat.plugin;
 
 import org.sinytra.adapter.api.MethodPatch;
 import org.sinytra.connector.transformer.api.PatchRegistrar;
@@ -15,7 +15,7 @@ import java.util.Set;
  * Retargets the ones whose handler still fits; disables the rest, which the nested NeoForge mod reimplements.
  * Patches are only registered while Connector transforms Create Fly itself (Fabric mod id "create").
  */
-public class CreateFlyPatchPlugin implements TransformerPlugin {
+public class ConnectorCompatPlugin implements TransformerPlugin {
     private static final String CREATE_FLY_ID = "create";
 
     private static final String GET_SOUND_TYPE = "Lnet/minecraft/world/level/block/state/BlockState;getSoundType()Lnet/minecraft/world/level/block/SoundType;";
@@ -35,7 +35,7 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
 
     @Override
     public String name() {
-        return "createfly_connector_patch";
+        return "connector_compat_patch";
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .build(),
             // BuiltInRegistriesMixin#afterFreeze (issue #369): runs at the end of BuiltInRegistries.freeze(), which on NeoForge
             // happens at Bootstrap with the root registry already frozen, so CreateRegistries' new registries can't be added.
-            // -> CreateRegistries are queued for NewRegistryEvent and the sorted caches built at common setup (CreateFlyPatchMod)
+            // -> CreateRegistries are queued for NewRegistryEvent and the sorted caches built at common setup (ConnectorCompatMod)
             MethodPatch.builder()
                 .targetClass("net/minecraft/core/registries/BuiltInRegistries")
                 .targetMethod("freeze")
@@ -99,7 +99,7 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .build(),
             // ReloadableServerResourcesMixin#add: works as written via AddServerReloadListenersEventMixin (all Fabric mods)
             // PersistentEntitySectionManagerCallbackMixin#onEnteringSection: implicit @Local long finds 2 candidates on NeoForge
-            // (NeoForge adds oldSectionKey) -> EntityEvent.EnteringSection in CreateFlyPatchMod
+            // (NeoForge adds oldSectionKey) -> EntityEvent.EnteringSection in ConnectorCompatMod
             MethodPatch.builder()
                 .targetClass("net/minecraft/world/level/entity/PersistentEntitySectionManager$Callback")
                 .targetMethod("onMove")
@@ -153,7 +153,7 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
      */
     @Override
     public void registerJarTransformers(TransformerRegistrar registrar, TransformerContext context) {
-        registrar.registerAfter("createfly_connector_patch:restored_hook_audit", Set.of(TransformerIds.METHOD_PATCHES),
+        registrar.registerAfter("connector_compat_patch:restored_hook_audit", Set.of(TransformerIds.METHOD_PATCHES),
             new RestoredHookAuditFilter(context.patchEnvironment().auditTrail()));
     }
 }

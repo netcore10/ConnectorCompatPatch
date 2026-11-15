@@ -1,7 +1,7 @@
-package net.netco.createflypatch.mixin;
+package net.netco.connectorcompat.mixin;
 
 import net.neoforged.neoforge.server.loading.ServerModLoader;
-import net.netco.createflypatch.LateConfigs;
+import net.netco.connectorcompat.LateConfigs;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerModLoader.class)
 public abstract class FabricEntrypointsLateConfigMixin {
     @Inject(method = "load", at = @At("RETURN"))
-    private static void createFlyPatch$loadLateConfigs(CallbackInfo ci) {
+    private static void connectorCompat$loadLateConfigs(CallbackInfo ci) {
         LateConfigs.load();
     }
 }

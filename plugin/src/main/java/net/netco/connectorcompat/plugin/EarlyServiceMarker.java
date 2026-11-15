@@ -1,4 +1,4 @@
-package net.netco.createflypatch.plugin;
+package net.netco.connectorcompat.plugin;
 
 import net.neoforged.neoforgespi.locating.IDependencyLocator;
 import net.neoforged.neoforgespi.locating.IDiscoveryPipeline;

@@ -9,10 +9,10 @@ neoForge {
     version = neo_version
     runs {
         client { client() }
-        // Force-applies all mixins at load-complete and logs every failure (see CreateFlyPatchMod)
+        // Force-applies all mixins at load-complete and logs every failure (see ConnectorCompatMod)
         auditClient {
             client()
-            systemProperty 'createflypatch.mixinAudit', 'true'
+            systemProperty 'connectorcompat.mixinAudit', 'true'
         }
         // Straight into an existing save: reproduces world-load problems without clicking through menus
         worldClient {

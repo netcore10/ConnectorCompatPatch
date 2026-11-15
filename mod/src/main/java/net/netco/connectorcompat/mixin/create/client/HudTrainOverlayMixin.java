@@ -1,4 +1,4 @@
-package net.netco.createflypatch.mixin.client;
+package net.netco.connectorcompat.mixin.create.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -27,29 +27,29 @@ public abstract class HudTrainOverlayMixin {
     private Minecraft minecraft;
 
     @Unique
-    private GuiGraphicsExtractor createFlyPatch$graphics;
+    private GuiGraphicsExtractor connectorCompat$graphics;
     @Unique
-    private DeltaTracker createFlyPatch$deltaTracker;
+    private DeltaTracker connectorCompat$deltaTracker;
 
     @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V", at = @At("HEAD"))
-    private void createFlyPatch$captureFrame(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        this.createFlyPatch$graphics = graphics;
-        this.createFlyPatch$deltaTracker = deltaTracker;
+    private void connectorCompat$captureFrame(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        this.connectorCompat$graphics = graphics;
+        this.connectorCompat$deltaTracker = deltaTracker;
     }
 
     @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V", at = @At("RETURN"))
-    private void createFlyPatch$releaseFrame(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        this.createFlyPatch$graphics = null;
-        this.createFlyPatch$deltaTracker = null;
+    private void connectorCompat$releaseFrame(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        this.connectorCompat$graphics = null;
+        this.connectorCompat$deltaTracker = null;
     }
 
     @WrapOperation(
         method = "updateContextualBarRenderer()V",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Hud;nextContextualInfoState()Lnet/minecraft/client/gui/Hud$ContextualInfo;")
     )
-    private Hud.ContextualInfo createFlyPatch$trainHud(Hud instance, Operation<Hud.ContextualInfo> original) {
-        if (this.createFlyPatch$graphics != null
-            && TrainHUD.renderOverlay(this.minecraft, this.createFlyPatch$graphics, this.createFlyPatch$deltaTracker)) {
+    private Hud.ContextualInfo connectorCompat$trainHud(Hud instance, Operation<Hud.ContextualInfo> original) {
+        if (this.connectorCompat$graphics != null
+            && TrainHUD.renderOverlay(this.minecraft, this.connectorCompat$graphics, this.connectorCompat$deltaTracker)) {
             return Hud.ContextualInfo.EMPTY;
         }
         return original.call(instance);
