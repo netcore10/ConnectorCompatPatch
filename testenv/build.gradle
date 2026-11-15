@@ -14,6 +14,11 @@ neoForge {
             client()
             systemProperty 'createflypatch.mixinAudit', 'true'
         }
+        // Straight into an existing save: reproduces world-load problems without clicking through menus
+        worldClient {
+            client()
+            programArguments.addAll '--quickPlaySingleplayer', 'New World'
+        }
         gameTestServer { type = 'gameTestServer' }
         configureEach {
             gameDirectory = file('run')
@@ -40,6 +45,6 @@ def clearConnectorCache = tasks.register('clearConnectorCache', Delete) {
     delete 'run/.cache/connector'
 }
 
-tasks.matching { it.name in ['prepareClientRun', 'prepareAuditClientRun', 'prepareGameTestServerRun'] }.configureEach {
+tasks.matching { it.name in ['prepareClientRun', 'prepareAuditClientRun', 'prepareWorldClientRun', 'prepareGameTestServerRun'] }.configureEach {
     dependsOn installMods, clearConnectorCache
 }

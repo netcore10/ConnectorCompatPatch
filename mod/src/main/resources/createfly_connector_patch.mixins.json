@@ -11,11 +11,13 @@
     "BlockSoundControlMixin",
     "CommonModLoaderMixin",
     "CreativeModeTabsValidateMixin",
+    "FabricEntrypointsLateConfigMixin",
     "CommonHooksPlacementMixin",
     "CreateRegistriesMixin",
     "ServerPlayerGameModeBreakControlMixin"
   ],
   "client": [
+    "client.FabricEntrypointsLateConfigClientMixin",
     "client.FlywheelGlBufferTypeMixin",
     "client.FlywheelGlStateTrackerMixin",
     "client.HudTrainOverlayMixin"

@@ -25,6 +25,7 @@ For all Fabric mods loaded through Connector:
 - Modded creative tabs no longer crash vanilla's tab-position check.
 - Restores the vanilla GUI picture-in-picture hook that Fabric mods inject into.
 - Adds Forge Config API Port's Fabric-side `ConfigurationScreen(String modId, Screen parent)` constructors to NeoForge's class, so Fabric mods' config screens don't crash at startup (e.g. Exposure).
+- Loads COMMON/CLIENT configs that Fabric mods register from their entrypoints, which run after NeoForge has already loaded configs (fixes "Cannot get config value before config is loaded" on world load, e.g. Exposure).
 
 For Create Fly:
 - Retargets or replaces its mixins that fail on NeoForge (block breaking, train HUD, entity section tracking, super glue and symmetry wand placement, sound/friction blocks, registry setup).
