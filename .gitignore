@@ -5,3 +5,4 @@ libs/
 testenv/run/
 .idea/
 *.iml
+testenv/extra-mods/

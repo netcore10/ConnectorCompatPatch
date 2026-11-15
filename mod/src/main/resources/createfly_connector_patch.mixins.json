@@ -16,6 +16,8 @@
     "ServerPlayerGameModeBreakControlMixin"
   ],
   "client": [
+    "client.FlywheelGlBufferTypeMixin",
+    "client.FlywheelGlStateTrackerMixin",
     "client.HudTrainOverlayMixin"
   ]
 }

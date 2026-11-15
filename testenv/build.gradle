@@ -18,6 +18,7 @@ neoForge {
         configureEach {
             gameDirectory = file('run')
             systemProperty 'neoforge.warnings.logofile.hide', 'true'
+            systemProperty 'neoforge.warnings.onlyin.hide', 'true'
         }
     }
 }
@@ -28,6 +29,8 @@ def installMods = tasks.register('installMods', Sync) {
     from("${rootDir}/libs") {
         include connector_jar, launchpad_jar, create_fly_jar, fabric_api_jar
     }
+    // Optional: more of the real pack (git-ignored), to reproduce pack-only problems
+    from('extra-mods') { include '*.jar' }
     into 'run/mods'
 }
 
