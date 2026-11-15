@@ -16,7 +16,8 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
     private static final String CREATE_FLY_ID = "create";
 
     private static final String GET_SOUND_TYPE = "Lnet/minecraft/world/level/block/state/BlockState;getSoundType()Lnet/minecraft/world/level/block/SoundType;";
-    private static final String DESTROY_BLOCK = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z";
+    private static final String BLOCK_GET_FRICTION = "Lnet/minecraft/world/level/block/Block;getFriction()F";
+    private static final String DESTROY_BLOCK ="Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z";
 
     // NeoForge's lambda also captures its LeftClickBlock event
     private static final String NEO_START_DESTROY_LAMBDA = "lambda$startDestroyBlock$1(Lnet/minecraft/world/level/block/state/BlockState;"
@@ -107,6 +108,28 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetClass("net/minecraft/world/level/entity/PersistentEntitySectionManager$Callback")
                 .targetMethod("onMove")
                 .targetInjectionPoint("INVOKE", "Lnet/minecraft/world/level/entity/PersistentEntitySectionManager$Callback;updateStatus(Lnet/minecraft/world/level/entity/Visibility;Lnet/minecraft/world/level/entity/Visibility;)V")
+                .disable()
+                .build(),
+            // AbstractBoatMixin / ExperienceOrbMixin / ItemEntityMixin#getSlipperiness: Adapter mirrors these into NeoForge's shared
+            // IBlockStateExtension#getFriction, which every entity calls, where the handler casts the entity to its own type
+            // (ClassCastException on the first player tick) -> BlockSoundControlMixin#getFriction covers all entities
+            MethodPatch.builder()
+                .targetClass("net/minecraft/world/entity/vehicle/boat/AbstractBoat")
+                .targetMethod("getGroundFriction")
+                .targetInjectionPoint("INVOKE", BLOCK_GET_FRICTION)
+                .disable()
+                .build(),
+            MethodPatch.builder()
+                .targetClass("net/minecraft/world/entity/ExperienceOrb", "net/minecraft/world/entity/item/ItemEntity")
+                .targetMethod("tick")
+                .targetInjectionPoint("INVOKE", BLOCK_GET_FRICTION)
+                .disable()
+                .build(),
+            // LeashableMixin#getSlipperiness: moved into the shared getFriction, where its entity may be null
+            MethodPatch.builder()
+                .targetClass("net/minecraft/world/entity/Leashable")
+                .targetMethod("angularFriction")
+                .targetInjectionPoint("INVOKE", BLOCK_GET_FRICTION)
                 .disable()
                 .build(),
             // GuiRendererMixin#addRenderer -> RegisterPictureInPictureRenderersEvent in CreateFlyPatchClient
