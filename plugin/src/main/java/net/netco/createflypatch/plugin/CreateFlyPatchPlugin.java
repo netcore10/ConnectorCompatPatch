@@ -132,6 +132,20 @@ public class CreateFlyPatchPlugin implements TransformerPlugin {
                 .targetInjectionPoint("INVOKE", BLOCK_GET_FRICTION)
                 .disable()
                 .build(),
+            // ItemStackMixin#cacheState + #useOnBlock share a BlockPlaceContext, but Adapter moves them into two different
+            // CommonHooks methods, so super glue / symmetry wand placement silently stops -> CommonHooksPlacementMixin
+            MethodPatch.builder()
+                .targetClass("net/minecraft/world/item/ItemStack")
+                .targetMethod("useOn")
+                .targetInjectionPoint("INVOKE", "Lnet/minecraft/world/item/Item;useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;")
+                .disable()
+                .build(),
+            MethodPatch.builder()
+                .targetClass("net/minecraft/world/item/ItemStack")
+                .targetMethod("useOn")
+                .targetInjectionPoint("INVOKE", "Lnet/minecraft/world/InteractionResult$Success;wasItemInteraction()Z")
+                .disable()
+                .build(),
             // GuiRendererMixin#addRenderer -> RegisterPictureInPictureRenderersEvent in CreateFlyPatchClient
             MethodPatch.builder()
                 .targetClass("net/minecraft/client/gui/render/GuiRenderer")
