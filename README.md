@@ -24,6 +24,7 @@ For all Fabric mods loaded through Connector:
 - Registries stay open while NeoForge mods are constructed, like during Fabric init (fixes "Registry is already frozen", e.g. Vanillin + Steam 'n' Rails).
 - Modded creative tabs no longer crash vanilla's tab-position check.
 - Restores the vanilla GUI picture-in-picture hook that Fabric mods inject into.
+- Adds Forge Config API Port's Fabric-side `ConfigurationScreen(String modId, Screen parent)` constructors to NeoForge's class, so Fabric mods' config screens don't crash at startup (e.g. Exposure).
 
 For Create Fly:
 - Retargets or replaces its mixins that fail on NeoForge (block breaking, train HUD, entity section tracking, super glue and symmetry wand placement, sound/friction blocks, registry setup).
