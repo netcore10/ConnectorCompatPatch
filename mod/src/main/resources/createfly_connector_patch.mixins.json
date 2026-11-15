@@ -9,6 +9,7 @@
   "mixins": [
     "AddServerReloadListenersEventMixin",
     "BlockSoundControlMixin",
+    "CreativeModeTabsValidateMixin",
     "CommonHooksPlacementMixin",
     "CreateRegistriesMixin",
     "ServerPlayerGameModeBreakControlMixin"
