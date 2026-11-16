@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "automobility:item/front_attachment",
+    "model": {
+      "type": "automobility:automobile_item",
+      "kind": "front_attachment"
+    }
+  }
+}
