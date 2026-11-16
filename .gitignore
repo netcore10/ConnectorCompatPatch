@@ -1,6 +1,6 @@
 .gradle/
 build/
-libs/
+
 */build/
 testenv/run/
 .idea/
