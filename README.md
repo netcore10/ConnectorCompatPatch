@@ -26,6 +26,7 @@ For all Fabric mods loaded through Connector:
 - Registries stay open while NeoForge mods are constructed, like during Fabric init (fixes "Registry is already frozen", e.g. Vanillin + Steam 'n' Rails).
 - Modded creative tabs no longer crash vanilla's tab-position check.
 - Restores the vanilla GUI picture-in-picture hook that Fabric mods inject into.
+- Faster world loading ("Preparing for world creation"): each mod jar's file list is read once instead of on every resource lookup. Connector bundles many mods as multi-jar packs, so this was most of the wait (2:42 → 0:54 in a ~125-mod pack, same recipes loaded).
 - Adds Forge Config API Port's Fabric-side `ConfigurationScreen(String modId, Screen parent)` constructors to NeoForge's class, so Fabric mods' config screens don't crash at startup (e.g. Exposure).
 - Loads COMMON/CLIENT configs that Fabric mods register from their entrypoints, which run after NeoForge has already loaded configs (fixes "Cannot get config value before config is loaded" on world load, e.g. Exposure).
 

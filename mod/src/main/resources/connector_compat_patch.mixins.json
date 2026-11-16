@@ -12,6 +12,7 @@
     "CommonModLoaderMixin",
     "CreativeModeTabsValidateMixin",
     "FabricEntrypointsLateConfigMixin",
+    "JarContentsPackResourcesIndexMixin",
     "MappedRegistryBakeMixin",
     "MappedRegistryAccessor"
   ],
