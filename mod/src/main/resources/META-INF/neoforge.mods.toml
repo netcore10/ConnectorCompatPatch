@@ -22,6 +22,9 @@ config="connector_compat_patch.bclib.mixins.json"
 [[mixins]]
 config="connector_compat_patch.wover_events.mixins.json"
 
+[[mixins]]
+config="connector_compat_patch.automobility.mixins.json"
+
 [[dependencies.connector_compat_patch]]
 modId="connector"
 type="required"

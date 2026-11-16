@@ -17,7 +17,7 @@ neoForge {
         // Straight into an existing save: reproduces world-load problems without clicking through menus
         worldClient {
             client()
-            programArguments.addAll '--quickPlaySingleplayer', 'New World'
+            programArguments.addAll '--quickPlaySingleplayer', (project.findProperty('world') ?: 'New World')
         }
         gameTestServer { type = 'gameTestServer' }
         configureEach {
@@ -28,14 +28,20 @@ neoForge {
     }
 }
 
+// -Pbare: only Connector, Launchpad and Fabric API (no patch, no Create Fly), to tell whether a problem is ours
+// -PextraMods=a*.jar,b*.jar: only those jars from extra-mods
+def bare = project.hasProperty('bare')
 def installMods = tasks.register('installMods', Sync) {
-    dependsOn ':plugin:jar'
-    from(project(':plugin').tasks.named('jar'))
+    if (!bare) {
+        dependsOn ':plugin:jar'
+        from(project(':plugin').tasks.named('jar'))
+    }
     from("${rootDir}/libs") {
-        include connector_jar, launchpad_jar, create_fly_jar, fabric_api_jar
+        include connector_jar, launchpad_jar, fabric_api_jar
+        if (!bare) include create_fly_jar
     }
     // Optional: more of the real pack (git-ignored), to reproduce pack-only problems
-    from('extra-mods') { include '*.jar' }
+    from('extra-mods') { include((project.findProperty('extraMods') ?: '*.jar').split(',')) }
     into 'run/mods'
 }
 
