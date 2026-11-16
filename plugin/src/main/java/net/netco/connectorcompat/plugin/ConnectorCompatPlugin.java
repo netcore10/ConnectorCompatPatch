@@ -16,6 +16,11 @@ import java.util.Set;
  * Each mod's patches are only registered while Connector transforms that mod (by Fabric mod id).
  */
 public class ConnectorCompatPlugin implements TransformerPlugin {
+    static {
+        // Connector creates its plugins before it first reads the clean game jar; fix that jar's cache on servers first
+        ServerGameJarFix.run();
+    }
+
     private static final String CREATE_FLY_ID = "create";
 
     private static final String GET_SOUND_TYPE = "Lnet/minecraft/world/level/block/state/BlockState;getSoundType()Lnet/minecraft/world/level/block/SoundType;";

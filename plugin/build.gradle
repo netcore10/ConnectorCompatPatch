@@ -25,6 +25,7 @@ dependencies {
     compileOnly 'org.ow2.asm:asm-tree:9.8'
     // Dist (FMLEnvironment#getDist) lives in mergetool's api jar, always present at runtime
     compileOnly('net.neoforged:mergetool:2.0.7:api') { transitive = false }
+    compileOnly 'org.slf4j:slf4j-api:2.0.17'
     nestedMod project(path: ':mod', configuration: 'runtimeElements')
 }
 
