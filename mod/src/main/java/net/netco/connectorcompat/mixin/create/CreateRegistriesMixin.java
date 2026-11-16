@@ -8,13 +8,13 @@ import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
-import net.netco.connectorcompat.create.PendingRegistries;
+import net.netco.connectorcompat.RootRegistryQueue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * Create Fly creates its 13 registries by writing them straight into the root registry. On NeoForge the root is frozen
- * outside NewRegistryEvent, so queue them instead; ConnectorCompatMod registers them in NewRegistryEvent (issue #369).
+ * outside NewRegistryEvent, so hand them to it instead (RootRegistryQueue; issue #369).
  * The returned holder is unused by Create's code.
  */
 @Mixin(CreateRegistries.class)
@@ -26,7 +26,7 @@ public abstract class CreateRegistriesMixin {
     private static Holder.Reference<?> connectorCompat$queueForNewRegistryEvent(
         WritableRegistry<?> root, ResourceKey<?> key, Object registry, RegistrationInfo info, Operation<Holder.Reference<?>> original
     ) {
-        PendingRegistries.add((Registry<?>) registry);
+        RootRegistryQueue.add((Registry<?>) registry);
         return null;
     }
 }

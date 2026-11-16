@@ -29,6 +29,15 @@ For all Fabric mods loaded through Connector:
 - Adds Forge Config API Port's Fabric-side `ConfigurationScreen(String modId, Screen parent)` constructors to NeoForge's class, so Fabric mods' config screens don't crash at startup (e.g. Exposure).
 - Loads COMMON/CLIENT configs that Fabric mods register from their entrypoints, which run after NeoForge has already loaded configs (fixes "Cannot get config value before config is loaded" on world load, e.g. Exposure).
 
+- New built-in registries that Fabric mods create while NeoForge has the root registry locked get added the way NeoForge adds its own (e.g. WorldWeaver, Create Fly).
+- Registries stay open while their own bake step runs, so Fabric code it triggers can still register (e.g. Better End's attributes).
+- NeoForge's early registry lock no longer fails on Fabric content that's created but only registered once the Fabric mod starts (e.g. Better Nether's entities). Connector's lock after Fabric startup still checks.
+
+For BCLib / WorldWeaver (Better End, Better Nether), only when installed:
+- BCLib's compostables work with NeoForge's compostables data map.
+- WorldWeaver's "world registries ready" event fires on NeoForge's world loader.
+- Turns off WorldWeaver's data-generation-only model hook, which can't apply on NeoForge (never runs in game).
+
 For Create Fly (only when it's installed):
 - Retargets or replaces its mixins that fail on NeoForge (block breaking, train HUD, entity section tracking, super glue and symmetry wand placement, sound/friction blocks, registry setup).
 - Its bundled Flywheel no longer crashes on GL buffer types it doesn't know (Crankshaft + Distant Horizons).

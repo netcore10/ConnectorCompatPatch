@@ -8,9 +8,12 @@
   },
   "mixins": [
     "AddServerReloadListenersEventMixin",
+    "BuiltInRegistriesQueueMixin",
     "CommonModLoaderMixin",
     "CreativeModeTabsValidateMixin",
-    "FabricEntrypointsLateConfigMixin"
+    "FabricEntrypointsLateConfigMixin",
+    "MappedRegistryBakeMixin",
+    "MappedRegistryAccessor"
   ],
   "client": [
     "client.FabricEntrypointsLateConfigClientMixin"

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.netco.connectorcompat.mixin.wover_events",
+  "plugin": "net.netco.connectorcompat.RequiredModMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "WorldLoaderRegistryReadyMixin"
+  ]
+}

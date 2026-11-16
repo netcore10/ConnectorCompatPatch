@@ -16,6 +16,9 @@ dependencies {
     // At runtime they are Connector's transformed copy of the same jar.
     compileOnly files("${rootDir}/libs/${create_fly_jar}")
     compileOnly files("${rootDir}/libs/${fabric_api_jar}")
+    // Other Fabric mods with fixes (mixin.<modid> packages, applied only when the mod is installed)
+    compileOnly files("${rootDir}/libs/${bclib_jar}")
+    compileOnly files("${rootDir}/libs/${wover_event_api_jar}")
 }
 
 processResources {

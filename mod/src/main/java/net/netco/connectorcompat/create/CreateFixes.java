@@ -4,7 +4,6 @@ import com.zurrtum.create.api.registry.CreateRegistries;
 import com.zurrtum.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 import com.zurrtum.create.content.kinetics.mechanicalArm.ArmInteractionPointType;
 import com.zurrtum.create.content.trains.entity.CarriageEntityHandler;
-import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -20,12 +19,9 @@ public final class CreateFixes {
         NeoForge.EVENT_BUS.addListener(CreateFixes::onEntityEnterSection);
     }
 
-    /** NeoForge's sanctioned point for new registries; replaces CreateRegistries' direct root-registry writes. */
+    /** Makes sure Create's registries exist by NewRegistryEvent; CreateRegistriesMixin hands them to it (RootRegistryQueue). */
     private static void registerCreateRegistries(NewRegistryEvent event) {
         CreateRegistries.register(); // forces CreateRegistries' static init if Create hasn't yet
-        for (Registry<?> registry : PendingRegistries.drain()) {
-            event.register(registry);
-        }
     }
 
     /**

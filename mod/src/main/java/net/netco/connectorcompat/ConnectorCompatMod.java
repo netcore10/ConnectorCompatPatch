@@ -10,6 +10,7 @@ public class ConnectorCompatMod {
     public static final String MOD_ID = "connector_compat_patch";
 
     public ConnectorCompatMod(IEventBus modBus) {
+        RootRegistryQueue.register(modBus); // before CreateFixes: its NewRegistryEvent listener adds to the queue
         if (ModList.get().isLoaded("create")) {
             CreateFixes.register(modBus);
         }

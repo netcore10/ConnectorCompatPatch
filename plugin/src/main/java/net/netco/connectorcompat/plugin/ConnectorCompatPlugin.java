@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Fixes the Create Fly (Fabric) mixins that NeoForge's patches break and Connector's Adapter can't remap.
  * Retargets the ones whose handler still fits; disables the rest, which the nested NeoForge mod reimplements.
- * Patches are only registered while Connector transforms Create Fly itself (Fabric mod id "create").
+ * Each mod's patches are only registered while Connector transforms that mod (by Fabric mod id).
  */
 public class ConnectorCompatPlugin implements TransformerPlugin {
     private static final String CREATE_FLY_ID = "create";
@@ -33,6 +33,45 @@ public class ConnectorCompatPlugin implements TransformerPlugin {
         + "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/blaze3d/resource/ResourceHandle;"
         + "Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;)V";
 
+    private static final String COMPOSTABLES_CONTAINS = "Lit/unimi/dsi/fastutil/objects/Object2FloatMap;containsKey(Ljava/lang/Object;)Z";
+
+    // BCLib ComposterBlockMixin / ComposterInputContainerMixin wrap COMPOSTABLES lookups that NeoForge replaced with its
+    // compostables data map (all behind ComposterBlock#getValue) -> mixin.bclib.ComposterBlockCompostablesMixin
+    private static final List<MethodPatch> BCLIB_PATCHES = List.of(
+        MethodPatch.builder()
+            .targetClass("net/minecraft/world/level/block/ComposterBlock")
+            .targetMethod("useItemOn", "insertItem")
+            .targetInjectionPoint("INVOKE", COMPOSTABLES_CONTAINS)
+            .disable()
+            .build(),
+        MethodPatch.builder()
+            .targetClass("net/minecraft/world/level/block/ComposterBlock$InputContainer")
+            .targetMethod("canPlaceItemThroughFace")
+            .targetInjectionPoint("INVOKE", COMPOSTABLES_CONTAINS)
+            .disable()
+            .build()
+    );
+    // WorldWeaver WorldLoaderMixin#wover_captureWorldgenRegistries: NeoForge's lambda takes its arguments in another order
+    // -> mixin.wover_events.WorldLoaderRegistryReadyMixin
+    private static final List<MethodPatch> WOVER_EVENTS_PATCHES = List.of(
+        MethodPatch.builder()
+            .targetClass("net/minecraft/server/WorldLoader")
+            .targetMethod("lambda$load$1")
+            .targetInjectionPoint("HEAD", null)
+            .disable()
+            .build()
+    );
+    // WorldWeaver ModelProviderMixin#wover_notExcluded: data generation only (never runs in game); NeoForge's target lambda
+    // is an instance method, the static handler can't apply
+    private static final List<MethodPatch> WOVER_BLOCK_PATCHES = List.of(
+        MethodPatch.builder()
+            .targetClass("net/minecraft/client/data/models/ModelProvider$BlockStateGeneratorCollector")
+            .targetMethod("lambda$validate$0")
+            .targetInjectionPoint("INVOKE", "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z")
+            .disable()
+            .build()
+    );
+
     @Override
     public String name() {
         return "connector_compat_patch";
@@ -40,7 +79,14 @@ public class ConnectorCompatPlugin implements TransformerPlugin {
 
     @Override
     public void registerPatches(PatchRegistrar registrar, TransformerContext context) {
-        if (!CREATE_FLY_ID.equals(context.candidateJar().modMetadata().getId())) {
+        String modId = context.candidateJar().modMetadata().getId();
+        switch (modId) {
+            case "bclib" -> registrar.add(BCLIB_PATCHES);
+            case "wover-events" -> registrar.add(WOVER_EVENTS_PATCHES);
+            case "wover-block" -> registrar.add(WOVER_BLOCK_PATCHES);
+            default -> {}
+        }
+        if (!CREATE_FLY_ID.equals(modId)) {
             return;
         }
         registrar.add(List.of(
