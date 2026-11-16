@@ -14,24 +14,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          persist-credentials: true
 
-      - name: Set up Java
-        uses: actions/setup-java@v5
+      - name: Set up Java 25
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Build mod
-        run: ./gradlew build --no-daemon
+      - name: Check required libraries
+        shell: bash
+        run: |
+          files=(
+            "connector-3.1.0-beta.4+26.2-full.jar"
+            "launchpad-1.10.2+26.2-full.jar"
+            "create-fly-26.2-6.0.9-2.jar"
+            "forgified-fabric-api-0.161.0+26.2+4.0.2.jar"
+            "bclib-26.201.6.jar"
+            "wover-event-api-26.201.6.jar"
+          )
 
-      - name: Publish release
+          for file in "${files[@]}"; do
+            if [ ! -f "libs/$file" ]; then
+              echo "::error::Missing dependency: libs/$file"
+              exit 1
+            fi
+          done
+
+      - name: Build mod
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          chmod +x gradlew
+          bash ./gradlew --no-daemon \
+            -Pmod_version="$VERSION" \
+            :plugin:build
+
+      - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            **/build/libs/*.jar
+          name: ConnectorCompatPatch ${{ github.ref_name }}
           generate_release_notes: true
+          files: |
+            plugin/build/libs/connector-compat-patch-*.jar
