@@ -14,6 +14,9 @@ public class ConnectorCompatMod {
         if (ModList.get().isLoaded("create")) {
             CreateFixes.register(modBus);
         }
+        if (ModList.get().isLoaded("automobility") && net.neoforged.fml.loading.FMLEnvironment.getDist().isClient()) {
+            AutomobilityFixes.register(modBus);
+        }
         // Diagnostic only (testenv auditClient run): apply every pending mixin now, logging each failure instead of
         // crashing on the first one the moment its target class happens to load in game
         if (Boolean.getBoolean("connectorcompat.mixinAudit")) {
