@@ -16,14 +16,8 @@ public final class FabricPipRenderers {
     }
 
     public static List<Object> merge(List<?> factories, ImmutableMap.Builder<?, ?> builder) {
-        ImmutableMap<?, ?> renderers = builder.buildOrThrow();
-        if (renderers.isEmpty()) {
-            @SuppressWarnings("unchecked")
-            List<Object> unchanged = (List<Object>) factories;
-            return unchanged;
-        }
         List<Object> merged = new ArrayList<>(factories);
-        merged.addAll(renderers.values());
+        merged.addAll(builder.buildOrThrow().values());
         return merged;
     }
 }

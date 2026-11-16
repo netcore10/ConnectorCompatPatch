@@ -22,8 +22,8 @@ import java.util.List;
  */
 public final class RootRegistryQueue {
     private static final List<Registry<?>> pending = new ArrayList<>();
-    private static NewRegistryEvent open;
-    private static boolean done;
+    private static volatile boolean eventStarted;
+    private static volatile boolean done;
 
     /** False once NeoForge has filled the root registry; later additions fail as they would without this patch. */
     public static boolean accepting() {
@@ -31,7 +31,7 @@ public final class RootRegistryQueue {
     }
 
     public static synchronized void add(Registry<?> registry) {
-        if (open != null) {
+        if (eventStarted) {
             addToRoot(registry);
         } else {
             pending.add(registry);
@@ -41,24 +41,25 @@ public final class RootRegistryQueue {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static void addToRoot(Registry<?> registry) {
         MappedRegistryAccessor root = (MappedRegistryAccessor) BuiltInRegistries.REGISTRY;
+        boolean wasFrozen = root.connectorCompat$isFrozen();
         root.connectorCompat$setFrozen(false);
         try {
             ((WritableRegistry) BuiltInRegistries.REGISTRY).register(registry.key(), registry, RegistrationInfo.BUILT_IN);
         } finally {
-            root.connectorCompat$setFrozen(true);
+            root.connectorCompat$setFrozen(wasFrozen);
         }
     }
 
     static void register(IEventBus modBus) {
         modBus.addListener(EventPriority.HIGHEST, (NewRegistryEvent event) -> {
             synchronized (RootRegistryQueue.class) {
-                open = event;
+                eventStarted = true;
                 pending.forEach(event::register);
                 pending.clear();
             }
         });
         modBus.addListener((ModifyRegistriesEvent event) -> {
-            open = null;
+            eventStarted = false;
             done = true;
         });
     }

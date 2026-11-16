@@ -23,7 +23,9 @@ public abstract class AddServerReloadListenersEventMixin {
     private static void connectorCompat$nameMixinAddedListener(PreparableReloadListener listener, CallbackInfoReturnable<Identifier> cir) {
         Class<? extends PreparableReloadListener> type = listener.getClass();
         if (VanillaServerListeners.getNameForClass(type) == null && !type.getPackageName().startsWith("net.minecraft")) {
-            String path = type.getName().toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9/._-]", "_");
+            // Names must be unique per reload (NeoForge throws on duplicates); a mod can add several listeners of one class
+            String path = type.getName().toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9/._-]", "_")
+                + "/" + Integer.toHexString(System.identityHashCode(listener));
             cir.setReturnValue(Identifier.fromNamespaceAndPath("fabric_mixin_listener", path));
         }
     }

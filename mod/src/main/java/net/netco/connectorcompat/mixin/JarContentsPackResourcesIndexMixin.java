@@ -10,12 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JarContentsPackResources answers every listResources/getNamespaces call by walking all entries of the mod's jar(s). Under
@@ -28,8 +27,9 @@ import java.util.WeakHashMap;
  */
 @Mixin(JarContentsPackResources.class)
 public abstract class JarContentsPackResourcesIndexMixin {
-    private static final Map<JarContents, NavigableMap<String, List<JarResource>>> connectorCompat$indexes =
-        Collections.synchronizedMap(new WeakHashMap<>());
+    // ponytail: every mod's non-class file handles stay in memory for the session and are never rebuilt (fine for jars;
+    // a dev setup editing mod folders live would need a /reload-time clear)
+    private static final Map<JarContents, NavigableMap<String, List<JarResource>>> connectorCompat$indexes = new ConcurrentHashMap<>();
 
     @WrapOperation(
         method = {"listResources", "getNamespaces"},
