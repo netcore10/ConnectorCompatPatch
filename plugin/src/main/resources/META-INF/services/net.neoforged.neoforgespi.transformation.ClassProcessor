@@ -1,2 +1,3 @@
 net.netco.connectorcompat.plugin.GuiRendererHookRestorer
 net.netco.connectorcompat.plugin.ConfigScreenModIdConstructors
+net.netco.connectorcompat.plugin.FabricEnvironmentStripper

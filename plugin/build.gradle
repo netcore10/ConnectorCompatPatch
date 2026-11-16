@@ -23,6 +23,8 @@ dependencies {
     // FML SPI: a no-op IDependencyLocator makes FML load this jar as an early service, next to Connector
     compileOnly('net.neoforged.fancymodloader:loader:11.0.16') { transitive = false }
     compileOnly 'org.ow2.asm:asm-tree:9.8'
+    // Dist (FMLEnvironment#getDist) lives in mergetool's api jar, always present at runtime
+    compileOnly('net.neoforged:mergetool:2.0.7:api') { transitive = false }
     nestedMod project(path: ':mod', configuration: 'runtimeElements')
 }
 
